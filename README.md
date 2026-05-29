@@ -121,7 +121,7 @@ The JSON format is simple and human-readable — easy to diff in PRs.
 ## Install from source
 
 ```bash
-git clone https://github.com/ze-dev/carabiner-annotator
+git clone https://github.com/josetapadas/Carabiner
 cd carabiner-annotator
 npm install
 npm run compile
