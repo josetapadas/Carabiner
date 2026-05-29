@@ -1,0 +1,93 @@
+{
+  "name": "carabiner",
+  "displayName": "Carabiner",
+  "description": "Annotate code paths across files, trace flows, and export rich Markdown reports for PR reviews and vulnerability research.",
+  "version": "0.1.0",
+  "icon": "icon.png",
+  "publisher": "Jose Tapadas Alves",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "carabiner.addNote", "title": "Carabiner: Add Selection as Note", "icon": "$(note)" },
+      { "command": "carabiner.removeAnnotation", "title": "Carabiner: Remove", "icon": "$(trash)" },
+      { "command": "carabiner.createProject", "title": "Carabiner: Create Project", "icon": "$(new-folder)" },
+      { "command": "carabiner.renameProject", "title": "Carabiner: Rename Project" },
+      { "command": "carabiner.deleteProject", "title": "Carabiner: Delete Project", "icon": "$(trash)" },
+      { "command": "carabiner.moveFlowToProject", "title": "Carabiner: Move Flow to Project" },
+      { "command": "carabiner.moveNoteToProject", "title": "Carabiner: Move Note to Project" },
+      { "command": "carabiner.createFlow", "title": "Carabiner: Create New Flow", "icon": "$(new-file)" },
+      { "command": "carabiner.deleteFlow", "title": "Carabiner: Delete Flow", "icon": "$(trash)" },
+      { "command": "carabiner.renameFlow", "title": "Carabiner: Rename Flow" },
+      { "command": "carabiner.setFlowDescription", "title": "Carabiner: Set Flow Description" },
+      { "command": "carabiner.addToFlow", "title": "Carabiner: Add Annotation to Flow", "icon": "$(add)" },
+      { "command": "carabiner.removeFromFlow", "title": "Carabiner: Remove from Flow", "icon": "$(remove)" },
+      { "command": "carabiner.moveUp", "title": "Carabiner: Move Step Up", "icon": "$(arrow-up)" },
+      { "command": "carabiner.moveDown", "title": "Carabiner: Move Step Down", "icon": "$(arrow-down)" },
+      { "command": "carabiner.goToAnnotation", "title": "Carabiner: Go to Annotation" },
+      { "command": "carabiner.exportFlow", "title": "Carabiner: Export Flow to Markdown", "icon": "$(markdown)" },
+      { "command": "carabiner.exportAllFlows", "title": "Carabiner: Export All to Markdown", "icon": "$(export)" },
+      { "command": "carabiner.editAnnotationComment", "title": "Carabiner: Edit Annotation" },
+      { "command": "carabiner.editNote", "title": "Carabiner: Edit Note" },
+      { "command": "carabiner.confirmAnnotation", "title": "Carabiner: Confirm" },
+      { "command": "carabiner.collapseAll", "title": "Carabiner: Collapse All", "icon": "$(collapse-all)" }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        { "id": "carabiner-explorer", "title": "Carabiner", "icon": "$(references)" }
+      ]
+    },
+    "views": {
+      "carabiner-explorer": [
+        { "id": "carabinerFlows", "name": "Flows" }
+      ]
+    },
+    "menus": {
+      "editor/context": [
+        { "command": "carabiner.addNote", "group": "carabiner@1", "when": "editorHasSelection" },
+        { "command": "carabiner.addToFlow", "group": "carabiner@2", "when": "editorHasSelection" }
+      ],
+      "view/title": [
+        { "command": "carabiner.createProject", "when": "view == carabinerFlows", "group": "navigation@1" },
+        { "command": "carabiner.createFlow",   "when": "view == carabinerFlows", "group": "navigation@2" },
+        { "command": "carabiner.exportAllFlows","when": "view == carabinerFlows", "group": "navigation@3" },
+        { "command": "carabiner.collapseAll",  "when": "view == carabinerFlows", "group": "navigation@4" }
+      ],
+      "view/item/context": [
+        { "command": "carabiner.renameProject", "when": "view == carabinerFlows && viewItem == project" },
+        { "command": "carabiner.deleteProject", "when": "view == carabinerFlows && viewItem == project" },
+        { "command": "carabiner.exportFlow", "when": "view == carabinerFlows && viewItem == flow", "group": "inline" },
+        { "command": "carabiner.deleteFlow", "when": "view == carabinerFlows && viewItem == flow" },
+        { "command": "carabiner.renameFlow", "when": "view == carabinerFlows && viewItem == flow" },
+        { "command": "carabiner.setFlowDescription", "when": "view == carabinerFlows && viewItem == flow" },
+        { "command": "carabiner.moveFlowToProject", "when": "view == carabinerFlows && viewItem == flow" },
+        { "command": "carabiner.removeFromFlow", "when": "view == carabinerFlows && viewItem == step" },
+        { "command": "carabiner.moveUp", "when": "view == carabinerFlows && viewItem == step", "group": "inline" },
+        { "command": "carabiner.moveDown", "when": "view == carabinerFlows && viewItem == step", "group": "inline" },
+        { "command": "carabiner.editAnnotationComment", "when": "view == carabinerFlows && viewItem == step" },
+        { "command": "carabiner.editNote", "when": "view == carabinerFlows && viewItem == looseAnnotation" },
+        { "command": "carabiner.moveNoteToProject", "when": "view == carabinerFlows && viewItem == looseAnnotation" },
+        { "command": "carabiner.removeAnnotation", "when": "view == carabinerFlows && viewItem == looseAnnotation" }
+      ]
+    },
+    "keybindings": [
+      { "command": "carabiner.addNote", "key": "ctrl+shift+a", "mac": "cmd+shift+a", "when": "editorTextFocus && editorHasSelection" },
+      { "command": "carabiner.addToFlow", "key": "ctrl+shift+f", "mac": "cmd+shift+f", "when": "editorTextFocus && editorHasSelection" },
+      { "command": "carabiner.confirmAnnotation", "key": "ctrl+enter", "mac": "cmd+enter", "when": "carabiner.annotationPending" }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "npx @vscode/vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.0.0"
+  }
+}
